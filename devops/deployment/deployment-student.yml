@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: student-service
+  labels:
+      app: student-service
+spec:
+  selector:
+    matchLabels:
+      app: student-service  
+  template:
+    metadata:
+      labels:
+        app: student-service
+      annotations:    
+        prometheus.io/scrape: "true"
+        prometheus.io/path: "/actuator/prometheus"
+        prometheus.io/port: "7000"
+    spec:
+      containers:
+      - name: student-service
+        image: ashishkamat2791/student-service
+        ports:
+        - containerPort: 7000
+          protocol: TCP
+        readinessProbe:
+         httpGet:
+           path: /hi
+           port: 7000
+         initialDelaySeconds: 5
+         timeoutSeconds: 2
+         periodSeconds: 3
+         failureThreshold: 2
+        livenessProbe:
+         httpGet:
+           path: /hi
+           port: 7000
+         initialDelaySeconds: 5
+         timeoutSeconds: 2
+         periodSeconds: 3
+         failureThreshold: 2
+
+

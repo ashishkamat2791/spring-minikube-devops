@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rating-service
+  labels:
+      app: rating-service
+spec:
+  selector:
+    matchLabels:
+      app: rating-service  
+  template:
+    metadata:
+      labels:
+        app: rating-service
+      annotations:    
+        prometheus.io/scrape: "true"
+        prometheus.io/path: "/actuator/prometheus"
+        prometheus.io/port: "5000"
+    spec:
+      containers:
+      - name: rating-service
+        image: ashishkamat2791/rating-service
+        ports:
+        - containerPort: 5000
+          protocol: TCP
+        readinessProbe:
+         httpGet:
+           path: /check
+           port: 5000
+         initialDelaySeconds: 5
+         timeoutSeconds: 2
+         periodSeconds: 3
+         failureThreshold: 2
+        livenessProbe:
+         httpGet:
+           path: /check
+           port: 5000
+         initialDelaySeconds: 5
+         timeoutSeconds: 2
+         periodSeconds: 3
+         failureThreshold: 2
+      

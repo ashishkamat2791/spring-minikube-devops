@@ -1,0 +1,16 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: student-service
+spec:
+  clusterIP: None
+  selector:
+    app: student-service
+  ports:
+    - name: port1
+      protocol: TCP
+      port: 7000
+      targetPort: 7000
+
+      
+      
